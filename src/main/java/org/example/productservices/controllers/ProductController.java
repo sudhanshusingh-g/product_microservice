@@ -28,7 +28,7 @@ public class ProductController {
 
     @PostMapping
     public Product addProduct(@RequestBody Product product){
-        return new Product();
+        return productService.createProduct(product);
     }
 
     @PutMapping("/{id}")
