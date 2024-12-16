@@ -33,11 +33,11 @@ public class ProductController {
 
     @PutMapping("/{id}")
     public Product updateProduct(@PathVariable("id") Long id, @RequestBody Product product){
-        return new Product();
+        return productService.updateProduct(id,product);
     }
     @PatchMapping("/{id}")
     public Product patchProduct(@PathVariable("id") Long id, @RequestBody Product product){
-        return new Product();
+        return productService.patchProduct(id,product);
     }
     @DeleteMapping("/{id}")
     public Product deleteProduct(@PathVariable("id") Long id){

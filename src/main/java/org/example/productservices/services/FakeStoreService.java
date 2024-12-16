@@ -1,6 +1,7 @@
 package org.example.productservices.services;
 
 import org.example.productservices.dtos.FakeStoreResponseDto;
+import org.example.productservices.dtos.PatchRequestDTO;
 import org.example.productservices.models.Category;
 import org.example.productservices.models.Product;
 import org.springframework.stereotype.Service;
@@ -83,7 +84,31 @@ public class FakeStoreService implements ProductService{
     }
 
     @Override
-    public Product updateProduct(Product product) {
-        return null;
+    public Product updateProduct(Long id,Product product) {
+        if(id != product.getId()) {
+            throw  new IllegalArgumentException("Product does not exist");
+        }
+       restTemplate.put("https://fakestoreapi.com/products/"+id, convertToDto(product));
+        return product;
     }
+
+    public Product patchProduct(Long id,Product product){
+        if(id != product.getId()) {
+            throw  new IllegalArgumentException("Product does not exist");
+        }
+        PatchRequestDTO patchRequestDTO=webClient.patch()
+                .uri("https://fakestoreapi.com/products/"+id)
+                .bodyValue(product)
+                .retrieve()
+                .bodyToMono(PatchRequestDTO.class)
+                .block();
+        if (patchRequestDTO != null) {
+            product.setName(patchRequestDTO.getName());
+            product.setDescription(patchRequestDTO.getDescription());
+            product.setPrice(patchRequestDTO.getPrice());
+            product.setImage(patchRequestDTO.getImage());
+        }
+        return product;
+    }
+
 }
