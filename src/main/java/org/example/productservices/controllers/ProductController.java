@@ -2,10 +2,12 @@ package org.example.productservices.controllers;
 
 import org.example.productservices.models.Product;
 import org.example.productservices.services.ProductService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/products")
@@ -23,7 +25,7 @@ public class ProductController {
 
     @GetMapping
     public List<Product> getAllProducts(){
-        return new ArrayList<Product>();
+        return productService.getAllProducts();
     }
 
     @PostMapping
@@ -40,7 +42,8 @@ public class ProductController {
         return productService.patchProduct(id,product);
     }
     @DeleteMapping("/{id}")
-    public Product deleteProduct(@PathVariable("id") Long id){
-        return new Product();
+    public ResponseEntity<String> deleteProduct(@PathVariable("id") Long id){
+        productService.deleteProductById(id);
+        return new ResponseEntity<>("Product deleted successfully",HttpStatus.OK);
     }
 }

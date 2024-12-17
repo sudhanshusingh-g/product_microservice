@@ -2,12 +2,15 @@ package org.example.productservices.services;
 
 import org.example.productservices.dtos.FakeStoreResponseDto;
 import org.example.productservices.dtos.PatchRequestDTO;
+import org.example.productservices.exceptions.ProductNotFound;
 import org.example.productservices.models.Category;
 import org.example.productservices.models.Product;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -47,7 +50,13 @@ public class FakeStoreService implements ProductService{
 
     @Override
     public List<Product> getAllProducts() {
-        return List.of();
+        FakeStoreResponseDto[] fakeStoreResponseDtos=
+        restTemplate.getForObject("https://fakestoreapi.com/products", FakeStoreResponseDto[].class);
+        List<Product> products=new ArrayList<>();
+        for(FakeStoreResponseDto fakeStoreResponseDto:fakeStoreResponseDtos){
+            products.add(convertToProduct(fakeStoreResponseDto));
+        }
+        return products;
     }
 
     @Override
@@ -80,7 +89,16 @@ public class FakeStoreService implements ProductService{
 
     @Override
     public void deleteProductById(Long id) {
-
+        try {
+            getProductById(id);
+            restTemplate.delete("https://fakestoreapi.com/products/"+id);
+        }
+        catch (HttpClientErrorException.NotFound e) {
+            throw new ProductNotFound("Product with id "+id+" not found");
+        }
+        catch (Exception e){
+            throw new RuntimeException("An error occurred while deleting the product with id " + id, e);
+        }
     }
 
     @Override
