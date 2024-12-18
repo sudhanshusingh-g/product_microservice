@@ -61,15 +61,21 @@ public class FakeStoreService implements ProductService{
 
     @Override
     public Product getProductById(Long id) {
-        FakeStoreResponseDto fakeStoreResponseDto= restTemplate.getForObject
-                ("https://fakestoreapi.com/products/"+id, FakeStoreResponseDto.class);
-        return convertToProduct(fakeStoreResponseDto);
+        try {
+            FakeStoreResponseDto fakeStoreResponseDto= restTemplate.getForObject
+                    ("https://fakestoreapi.com/products/"+id, FakeStoreResponseDto.class);
+            if (fakeStoreResponseDto == null) {
+                throw new ProductNotFound("Product with id " + id + " not found");
+            }
+            return convertToProduct(fakeStoreResponseDto);
+        }
+        catch (HttpClientErrorException.NotFound e){
+            throw new ProductNotFound("Product with "+id+" not found");
+        }
+
     }
 
     public  Product convertToProduct(FakeStoreResponseDto dto) {
-        if (dto == null) {
-            throw new IllegalArgumentException("FakeStoreResponseDto cannot be null");
-        }
 
         Product product = new Product();
         product.setId(dto.getId());
@@ -94,11 +100,9 @@ public class FakeStoreService implements ProductService{
             restTemplate.delete("https://fakestoreapi.com/products/"+id);
         }
         catch (HttpClientErrorException.NotFound e) {
-            throw new ProductNotFound("Product with id "+id+" not found");
+            throw new ProductNotFound("Product with id " + id + " not found");
         }
-        catch (Exception e){
-            throw new RuntimeException("An error occurred while deleting the product with id " + id, e);
-        }
+
     }
 
     @Override
