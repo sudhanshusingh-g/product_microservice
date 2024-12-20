@@ -13,7 +13,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import java.util.ArrayList;
 import java.util.List;
 
-@Service
+@Service("fakeStoreService")
 public class FakeStoreService implements ProductService{
     private RestTemplate restTemplate;
     private WebClient webClient;
@@ -85,7 +85,7 @@ public class FakeStoreService implements ProductService{
         product.setImage(dto.getImage());
 
         Category category = new Category();
-        category.setId(0);
+        category.setId(0L);
         category.setTitle(dto.getCategory());
 
         product.setCategory(category);

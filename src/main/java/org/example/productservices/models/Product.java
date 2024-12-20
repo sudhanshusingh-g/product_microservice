@@ -7,10 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-public class Product {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+public class Product extends BaseModel{
     private String name;
     private String description;
     private double price;
