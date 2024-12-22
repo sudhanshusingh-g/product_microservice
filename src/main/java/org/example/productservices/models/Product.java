@@ -14,4 +14,5 @@ public class Product extends BaseModel{
     @ManyToOne
     private Category category;
     private String image;
+    private int rating;
 }

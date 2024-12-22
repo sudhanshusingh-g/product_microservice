@@ -12,8 +12,8 @@ import java.util.List;
 @Entity
 public class Category extends BaseModel {
     private String title;
-//    @OneToMany
-//    private List<Product> products;
+    @OneToMany
+    private List<Product> products;
 }
 //         By default, if relationship of
 //        Outer table -> Inner table has one then Early fetching is done
