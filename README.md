@@ -4,7 +4,7 @@
 The Product Service is a core microservice in an e-commerce backend system, responsible for managing product-related
 operations. It acts as a bridge between the product catalog and other services like order management, inventory, and
 recommendations. Built using Spring Boot, this microservice is designed to be scalable, maintainable, and efficient,
-ensuring seamless integration with other components of the system.
+ensuring seamless integration with other components of the system..
 
 ## Features
 - Product Management: Provides CRUD (Create, Read, Update, Delete) operations for managing product information. 
