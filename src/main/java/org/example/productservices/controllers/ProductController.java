@@ -1,5 +1,6 @@
 package org.example.productservices.controllers;
 
+import org.example.productservices.dtos.ProductResponse;
 import org.example.productservices.models.Product;
 import org.example.productservices.services.ProductService;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -10,23 +11,43 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/products")
+@RequestMapping("/api/products")
 public class ProductController {
 
-    private ProductService productService;
-    public ProductController(@Qualifier("selfProductService") ProductService productService) {
+    private final ProductService productService;
+    public ProductController(@Qualifier("fakeStoreService") ProductService productService) {
         this.productService = productService;
     }
 
     @GetMapping("/{id}")
-    public Product getProductById(@PathVariable("id") Long id){
-        return productService.getProductById(id);
+    public ProductResponse getProductById(@PathVariable("id") Long id){
+        return convertToDTO(productService.getProductById(id));
     }
 
     @GetMapping
-    public List<Product> getAllProducts(){
-        return productService.getAllProducts();
+    public List<ProductResponse> getAllProducts(){
+
+        List<Product> products= productService.getAllProducts();
+        return products.stream()
+                .map(this::convertToDTO)
+                .toList();
     }
+
+    private ProductResponse convertToDTO(Product product) {
+        ProductResponse dto = new ProductResponse();
+        dto.setId(product.getId());
+        dto.setTitle(product.getName());
+        dto.setDescription(product.getDescription());
+        dto.setPrice(product.getPrice());
+        dto.setImage(product.getImage());
+
+        if (product.getCategory() != null) {
+            dto.setCategory(product.getCategory().getTitle());
+        }
+
+        return dto;
+    }
+
 
     @PostMapping
     public Product addProduct(@RequestBody Product product){
