@@ -1,4 +1,4 @@
-# E-Commerce Product Service Microservice
+# E-Commerce Product Microservice
 
 ## Overview
 The Product Service is a core microservice in an e-commerce backend system, responsible for managing product-related
