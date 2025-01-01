@@ -1,5 +1,6 @@
 package org.example.productservices.services;
 
+import org.example.productservices.dtos.AddProductResponse;
 import org.example.productservices.dtos.ProductResponse;
 import org.example.productservices.dtos.PatchRequestDTO;
 import org.example.productservices.exceptions.ProductNotFound;
@@ -24,8 +25,18 @@ public class ProductServiceImp implements ProductService{
     }
 
     @Override
-    public Product createProduct(Product product) {
-        return null;
+    public Product createProduct(String title,double price,String description,String category,String image) {
+        AddProductResponse productResponse=webClient.post()
+                .uri("https://fakestoreapi.com/products")
+                .retrieve()
+                .bodyToMono(AddProductResponse.class)
+                .block();
+        assert productResponse != null;
+
+        Product product=new Product();
+        product.setId(productResponse.getId());
+
+        return product;
     }
 
 

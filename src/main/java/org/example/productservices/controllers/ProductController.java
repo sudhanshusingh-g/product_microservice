@@ -1,6 +1,9 @@
 package org.example.productservices.controllers;
 
+import org.example.productservices.dtos.AddProductRequest;
+import org.example.productservices.dtos.AddProductResponse;
 import org.example.productservices.dtos.ProductResponse;
+import org.example.productservices.models.Category;
 import org.example.productservices.models.Product;
 import org.example.productservices.services.ProductService;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -50,9 +53,18 @@ public class ProductController {
 
 
     @PostMapping
-    public Product addProduct(@RequestBody Product product){
-        return productService.createProduct(product);
+    public AddProductResponse addProduct(@RequestBody AddProductRequest request){
+
+
+        Product product=productService.createProduct(request.getTitle(), request.getPrice(), request.getDescription(),
+                request.getCategory(), request.getImage());
+        AddProductResponse response=new AddProductResponse();
+        response.setId(product.getId());
+
+        return response;
     }
+
+
 
     @PutMapping("/{id}")
     public Product updateProduct(@PathVariable("id") Long id, @RequestBody Product product){
