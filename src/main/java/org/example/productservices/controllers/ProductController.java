@@ -6,10 +6,12 @@ import org.example.productservices.dtos.ProductResponse;
 import org.example.productservices.models.Category;
 import org.example.productservices.models.Product;
 import org.example.productservices.services.ProductService;
+import org.example.productservices.services.UserServiceClient;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -18,12 +20,19 @@ import java.util.List;
 public class ProductController {
 
     private final ProductService productService;
-    public ProductController(@Qualifier("fakeStoreService") ProductService productService) {
+    private final UserServiceClient userServiceClient;
+    public ProductController(@Qualifier("fakeStoreService") ProductService productService
+    , UserServiceClient userServiceClient) {
         this.productService = productService;
+        this.userServiceClient = userServiceClient;
     }
 
     @GetMapping("/{id}")
-    public ProductResponse getProductById(@PathVariable("id") Long id){
+    public ProductResponse getProductById(@RequestHeader("Authorization")String token,@PathVariable("id") Long id){
+        String value=token.startsWith("Bearer ")?token.substring(7):token;
+        if(!userServiceClient.validateToken(value)){
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized");
+        }
         return convertToDTO(productService.getProductById(id));
     }
 
