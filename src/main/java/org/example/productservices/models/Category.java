@@ -1,5 +1,8 @@
 package org.example.productservices.models;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,9 +10,9 @@ import java.util.List;
 
 @Getter
 @Setter
+@Entity
 public class Category extends BaseModel {
     private String title;
-    private List<Product> products;
 }
 //         By default, if relationship of
 //        Outer table -> Inner table has one then Early fetching is done

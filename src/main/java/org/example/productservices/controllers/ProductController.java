@@ -21,7 +21,7 @@ public class ProductController {
 
     private final ProductService productService;
     private final UserServiceClient userServiceClient;
-    public ProductController(@Qualifier("fakeStoreService") ProductService productService
+    public ProductController(@Qualifier("self_product_service") ProductService productService
     , UserServiceClient userServiceClient) {
         this.productService = productService;
         this.userServiceClient = userServiceClient;
